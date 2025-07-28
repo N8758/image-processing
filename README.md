@@ -1,86 +1,92 @@
+
 # 🧪 Photo or Text to 3D Model Generator (Prototype)
 
-This project is a Python-based prototype that converts either:
-- A **photo** of a single object (e.g., chair, toy, car), or
-- A **text description** (e.g., "a small toy car")
+A Python + Streamlit app that turns:
 
-into a simple 3D model (`.stl` or `.obj`) that can be visualized or exported for 3D printing.
+* 📷 A **photo of a single object** (e.g., chair, toy, car)
+* 📝 Or a **short text description** (e.g., "a small toy car")
 
----
+→ into a simple **3D model** (`.stl` or `.obj`) for preview or 3D printing.
 
 ## 📁 Project Structure
 
 ```
 photo-text-to-3d/
-├── main.py                 # Main entry script
+├── streamlit_app.py         # ✅ Web app (Streamlit Cloud entry point)
+├── main.py                  # CLI version (optional)
 ├── utils/
-│   ├── image_processing.py # Image → 3D logic (background removal, basic shape)
-│   ├── text_to_3d.py       # Text prompt → 3D shape generation
-│   └── visualizer.py       # Simple 3D visualizer using trimesh
-├── outputs/                # All generated 3D models are saved here
-├── requirements.txt        # All dependencies
-└── README.md               # You're reading this!
+│   ├── image_processing.py  # Image → 3D model logic
+│   ├── text_to_3d.py        # Text → 3D shape generator
+│   └── visualizer.py        # 3D visualizer (for local use only)
+├── outputs/                 # Saved 3D models (.obj/.stl)
+├── requirements.txt         # Dependencies
+└── README.md
 ```
 
 ---
 
-## 🚀 How It Works
+## ⚙️ How It Works
 
-### 1. **Input**
-You can choose:
-- **Option 1:** Upload an image of a single object (e.g. `car.png`)
-- **Option 2:** Enter a short descriptive text (e.g. "A red toy car")
+### 1. Input Options
+
+* **Option 1**: Upload a `.jpg` or `.png` image of an object
+* **Option 2**: Enter a short descriptive prompt (e.g. `"A red toy car"`)
+
+### 2. Processing
+
+* 📸 **Image Input**:
+
+  * Removes background using [`rembg`](https://github.com/danielgatis/rembg)
+  * Converts object shape into 3D point cloud and mesh using `trimesh`
+* 🧠 **Text Input**:
+
+  * Maps common nouns to primitives: box, sphere, cylinder
+  * Generates basic 3D geometry
+
+### 3. Output
+
+* Saves a `.obj` or `.stl` file in the `outputs/` folder
+* On Streamlit, provides a **download link**
 
 ---
 
-### 2. **Processing**
-- **For Images:**
-  - Uses `rembg` to remove the background
-  - Converts the image to a basic 3D shape using point sampling
-- **For Text:**
-  - Simple logic maps key nouns/keywords to basic 3D primitives (cube, sphere, etc.)
+## 🖥️ Local Installation
 
----
+### 🔧 Step 1: Clone this repo
 
-### 3. **Output**
-- A `.stl` or `.obj` 3D file is saved in the `outputs/` folder
-- You also get a live 3D preview of the model using `trimesh`
-
----
-
-## 📦 Installation
-
-### Step 1: Clone this repository
 ```bash
 git clone https://github.com/yourusername/photo-text-to-3d.git
 cd photo-text-to-3d
 ```
 
-### Step 2: Create & activate virtual environment
+### 🐍 Step 2: Set up virtual environment
+
 ```bash
 python -m venv venv
-# Windows
+# Windows:
 venv\Scripts\activate
-# macOS/Linux
+# macOS/Linux:
 source venv/bin/activate
 ```
 
-### Step 3: Install dependencies
+### 📦 Step 3: Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## ▶️ Running the Project
+## ▶️ Running Locally
 
-Once dependencies are installed:
+### 🖥️ Terminal (CLI version):
 
 ```bash
 python main.py
 ```
 
-You’ll be prompted to:
+You’ll see:
+
 ```
 🧪 3D Model Generator
 ---------------------
@@ -89,59 +95,62 @@ You’ll be prompted to:
 Choose an option (1 or 2):
 ```
 
----
+### 🌐 Streamlit App (Web version):
 
-## 📥 Example Inputs
-
-### ✅ Option 1: Image
-- Provide the path to a `.jpg` or `.png` file
-- Output: `outputs/generated_model.stl` or `.obj`
-- Visualization window opens automatically
-
-### ✅ Option 2: Text
-- Enter: `"a small toy car"`
-- Output: simple 3D shape file
-- Live viewer shows result
+```bash
+streamlit run streamlit_app.py
+```
 
 ---
 
-## 🧠 Thought Process & Architecture
+## 📂 Example Inputs
 
-- I prioritized simplicity and prototype-readiness.
-- Image input is handled with `rembg` for clean object extraction.
-- Text input maps basic nouns to shapes using deterministic rules.
-- The output uses `trimesh` for easy STL/OBJ creation and preview.
-- The system is modular and can be extended later with AI models like **Shap-E**, **Point-E**, or **DreamFusion**.
+| Input Type | Example             | Output                     |
+| ---------- | ------------------- | -------------------------- |
+| Image      | `car.png`           | `outputs/model_<uuid>.obj` |
+| Text       | `"a small toy car"` | `outputs/model_<uuid>.obj` |
 
 ---
 
-## 🛠️ Libraries Used
+## 🧠 Thought Process
 
-- [`rembg`](https://github.com/danielgatis/rembg): Background removal
-- `trimesh`: 3D mesh creation and visualization
-- `numpy`, `Pillow`: Image and math handling
-- `uuid`: For generating unique filenames
+* Minimalistic prototype logic for fast testing
+* Modular design: separate files for image, text, and visualization
+* Easily extendable with AI 3D models like [Shap-E](https://github.com/openai/shap-e), [Point-E](https://github.com/openai/point-e), or [DreamFusion](https://dreamfusion3d.github.io)
+
+---
+
+## 🔧 Tech Stack
+
+| Tool                      | Purpose                        |
+| ------------------------- | ------------------------------ |
+| `streamlit`               | Web frontend                   |
+| `rembg`                   | Background removal from images |
+| `trimesh`                 | 3D model creation/export       |
+| `numpy`, `Pillow`, `uuid` | Utilities                      |
+| `opencv-python-headless`  | Image decoding                 |
 
 ---
 
 ## ✅ Example Output Files
 
-You can find sample generated `.stl` or `.obj` files in:
+All generated `.obj` / `.stl` files are saved in:
+
 ```
-/outputs/
+outputs/
 ```
 
 ---
 
-## 💡 Future Improvements
+## 💡 Future Plans
 
-- Integrate advanced open-source text-to-3D models (e.g., Shap-E, Point-E)
-- Improve geometry extraction from images
-- Deploy this as a web app (e.g., using FastAPI + Three.js frontend)
-
----
-
-
+* Integrate advanced AI text-to-3D models (e.g., Shap-E, Point-E)
+* Improve mesh generation from images (depth estimation, segmentation)
+* Support model preview on Streamlit using `stpyvista`, `three.js`, or `vtk.js`
 
 ---
+
+## 📬 Feedback & Contributions
+
+Feel free to open issues, submit PRs, or fork the project!
 
