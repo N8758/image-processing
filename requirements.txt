@@ -1,7 +1,7 @@
 streamlit==1.32.2
-numpy==1.24.3
+numpy==1.26.4
 opencv-python==4.6.0.66
 rembg==2.0.50
 trimesh==3.23.5
 pyrender==0.1.45
-matplotlib==3.7.2
+matplotlib==3.8.2
